@@ -1,0 +1,371 @@
+/* -------------------------------------------------- */
+/*                     GLOBAL STYLES                  */
+/* -------------------------------------------------- */
+
+html, body {
+    background-color: #F9FAFB;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                 Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    height: 100%;
+    line-height: 1.6;
+    margin: 0;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #0A0A0A;
+    margin: 0 0 0.5rem 0;
+}
+
+h1 { font-size: 2rem; text-align: center; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.1rem; }
+
+p, li { color: #4A5565; font-size: 1rem; }
+small { font-size: 0.8rem; }
+#span-bold { font-weight: bold; }
+
+.hidden { display: none !important; }
+
+/* -------------------------------------------------- */
+/*                     LAYOUT: CONTAINERS             */
+/* -------------------------------------------------- */
+
+.container {
+    background-color: #FFF;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    border-radius: 14px;
+    box-sizing: border-box;
+    padding: 1rem;
+}
+
+.center-vertical-wrapper {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.center-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* -------------------------------------------------- */
+/*                        HEADER                      */
+/* -------------------------------------------------- */
+
+#game-header {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    position: relative;
+    width: 100%;
+}
+
+#game-header h1 { margin: 0; }
+
+#header-subtitle {
+    color: #4A5565;
+    font-size: 1rem;
+    margin: 0.25rem 0 0 0;
+    text-align: center;
+}
+
+/* Help / Close Buttons */
+#help-btn, #close-btn {
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+#help-btn img, #close-btn img {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+#help-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* -------------------------------------------------- */
+/*                        SETUP                       */
+/* -------------------------------------------------- */
+
+#setup-frame {
+    box-sizing: border-box;
+    text-align: center;
+    width: 448px;
+}
+
+#setup-frame input[type="number"] {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    margin: 10px 0;
+    padding: 8px;
+    width: 100%;
+}
+
+/* -------------------------------------------------- */
+/*                        BUTTONS                     */
+/* -------------------------------------------------- */
+
+button {
+    background: #030213;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    padding: 8px 16px;
+}
+
+#results button {
+    align-self: center;
+    margin-top: 25px;
+    padding: 8px 16px;
+    width: auto;
+}
+
+/* -------------------------------------------------- */
+/*                        OVERLAY                     */
+/* -------------------------------------------------- */
+
+#overlay {
+    backdrop-filter: blur(2px);
+    background: rgba(0,0,0,0.2);
+    height: 100vh;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    z-index: 100;
+}
+
+/* -------------------------------------------------- */
+/*                      INSTRUCTIONS                  */
+/* -------------------------------------------------- */
+
+#instructions {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1),
+                0 4px 6px -4px rgba(0,0,0,0.1);
+    left: 50%;
+    max-height: 80%;
+    overflow-y: auto;
+    padding: 20px;
+    position: fixed;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 505px;
+    z-index: 200;
+}
+
+#instructions-head {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Callouts */
+.callout {
+    align-items: center;
+    background: #EFF6FF;
+    border: 1px solid #BEDBFF;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    margin: 0.5rem 0;
+    padding: 5px 10px;
+}
+
+.callout p {
+    color: #193CB8;
+    font-weight: 400;
+    margin: 0;
+}
+
+.callout span {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    padding: 0 5px;
+}
+
+.callout span img {
+    display: block;
+    height: 16px;
+    width: 16px;
+}
+
+.filter-blue {
+    filter: invert(20%) sepia(61%) saturate(3103%)
+            hue-rotate(220deg) brightness(88%) contrast(102%);
+}
+
+/* -------------------------------------------------- */
+/*                     GAME STATUS                    */
+/* -------------------------------------------------- */
+
+#game-status {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+}
+
+#status-round,
+#status-number {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+}
+
+#status-number {
+    justify-content: flex-end;
+}
+
+.badge {
+    background-color: #193CB8;
+    border-radius: 6px;
+    color: white;
+    font-family: Consolas;
+    font-weight: bold;
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    text-align: center;
+}
+
+/* -------------------------------------------------- */
+/*                     GAMEPLAY                       */
+/* -------------------------------------------------- */
+
+.gameplay {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin: 0 auto;
+    max-width: 900px;
+    width: 100%;
+}
+
+#gameplay-frame {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.container-gameplay {
+    background: #FFF;
+    border: 1px solid rgba(0,0,0,0.10);
+    border-radius: 14px;
+    padding: 10px 24px;
+    width: 50%;
+}
+
+.guess-round {
+    align-items: center;
+    background-color: #F9FAFB;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    min-height: 30px;
+    padding: 10px;
+}
+
+.feedback-group { display: flex; gap: 0.25rem; }
+.feedback-exact, .feedback-misplaced { visibility: hidden; }
+
+/* -------------------------------------------------- */
+/*                   EXAMPLES / LEGEND                */
+/* -------------------------------------------------- */
+
+.instructions-container {
+    background: #F9FAFB;
+    border-radius: 10px;
+    gap: 0.1rem;
+    padding: 0.75rem 1rem;
+}
+
+.example-grid { display: flex; flex-direction: column; gap: 0.5rem; }
+.example-row  { display: flex; flex-direction: column; gap: 0.25rem; }
+.example-number { display: flex; justify-content: space-between; align-items: center; }
+.example-context { font-size: 0.75rem; margin-top: -0.5rem; }
+
+.guess {
+    color: #4A5565;
+    font-family: Consolas;
+    font-weight: 700;
+    padding-left: 1rem;
+}
+
+#legend-grid {
+    align-items: center;
+    display: grid;
+    gap: 0 1rem;
+    grid-template-columns: min-content auto;
+    grid-template-rows: auto auto;
+    justify-content: left;
+    padding: 0.75rem 1rem;
+}
+
+/* -------------------------------------------------- */
+/*                       RESULTS                      */
+/* -------------------------------------------------- */
+
+#winner,
+#announcement,
+#results-grid {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.winner-call {
+    background: #DAFADF;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    min-height: 30px;
+}
+
+#results {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 900px;
+    min-height: 35vh;
+    text-align: center;
+    width: 100%;
+}
+
+#results-grid {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    width: 100%;
+}
+
+.result-item {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    gap: 0.25rem;
+}
