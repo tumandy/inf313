@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>INF 313 Group 5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INF 313 - Crack the Code</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -11,11 +12,11 @@
     <!-- Overlay for instructions -->
     <div id="overlay" class="hidden"></div>
 
-    <!--Header and setup-->
+    <!-- Header and setup -->
     <div class="center-vertical-wrapper">
         <div id="game-header">
             <h1>Crack the Code</h1>
-            <button id="help-btn"><img src="assets/help.svg" alt="help-icon"></button>
+            <button id="help-btn"><img src="assets/icons/help.svg" alt="help-icon" class="icon-sign"></button>
         </div>
         <p id="header-subtitle">Win by guessing your opponent's secret 3-digit number in the fewest tries.</p>
 
@@ -23,31 +24,31 @@
             <div class="container" id="setup-frame">
                 <h3>Pick your secret number.</h3>
                 <p>Choose a 3-digit number (digits 1-9, no repeats) that the computer will try to guess.</p>
-                <input type="number" min="123" max="987" placeholder="Enter 3 digits">
-                <button type="submit" id="start">Start</button>
+                <input type="number" id="setup-input" min="123" max="987" placeholder="Enter 3 digits">
+                <div id="setup-error-msg"></div>
+                <button type="submit" id="start-btn">Start Game</button>
             </div>
         </div>
     </div>
-
 
     <!-- Instructions Modal -->
     <div id="instructions">
         <div id="instructions-head">
             <h2>How to Play</h2>
-            <button id="close-btn"><img src="assets/close.svg" alt="close-icon"></button>
+            <button id="close-btn"><img src="assets/icons/close.svg" alt="close-icon"></button>
         </div>
 
         <p>Deduce the number logic before the Computer!</p>
         <div class="callout">
             <p>You can view these instructions again by clicking the
-                <span><img src="assets/help.svg" class="filter-blue" alt="help-icon"></span>
+                <span><img src="assets/icons/help.svg" class="filter-blue" alt="help-icon"></span>
                 icon in the top-right corner.
             </p>
         </div>
 
         <h3>Objective</h3>
-        <p>Be the first to correctly guess your opponent's secret 3-digit number within 7 attempts. The player
-            who guesses correctly in the fewest rounds wins!</p>
+        <p>Be the first to correctly guess your opponent's secret 3-digit number within 7 attempts. The player who
+            guesses correctly in the fewest rounds wins!</p>
 
         <h3>Rules</h3>
         <ol>
@@ -68,13 +69,13 @@
         <div class="instructions-container">
             <div id="legend-grid">
                 <div class="legend-grid-item">
-                    <img src="assets/feedback_exact.svg" alt="correct number right position">
+                    <img src="assets/icons/feedback_exact.svg" alt="correct number right position" class="icon-sign">
                 </div>
                 <div class="legend-grid-item">
                     <p>Correct digit in the correct position</p>
                 </div>
                 <div class="legend-grid-item">
-                    <img src="assets/feedback_misplaced.svg" alt="correct number wrong position">
+                    <img src="assets/icons/feedback_misplaced.svg" alt="correct number wrong position" class="icon-sign">
                 </div>
                 <div class="legend-grid-item">
                     <p>Correct digit but in the wrong position</p>
@@ -82,8 +83,8 @@
             </div>
         </div>
 
-        <p>Computer uses a feedback-based elimination strategy. First, it uses two fixed probes (123, 456), then
-            runs elimination + minimax to select next guesses.</p>
+        <p>Computer uses a feedback-based elimination strategy. First, it uses two fixed probes (123, 456), then runs
+            elimination + minimax to select next guesses.</p>
 
         <h4>Example</h4>
         <div class="instructions-container example-grid">
@@ -95,7 +96,7 @@
             <div class="example-row">
                 <div class="example-number">
                     <p>Your guess: <span class="guess">4 5 9</span></p>
-                    <img src="assets/feedback_exact.svg" alt="correct number right position">
+                    <img src="assets/icons/feedback_exact.svg" alt="correct number right position" class="icon-sign">
                 </div>
                 <p class="example-context"><small>One digit is correct and in the right position.</small></p>
             </div>
@@ -103,8 +104,8 @@
                 <div class="example-number">
                     <p>Your guess: <span class="guess">4 7 1</span></p>
                     <div class="feedback-group">
-                        <img src="assets/feedback_exact.svg" alt="correct number right position">
-                        <img src="assets/feedback_misplaced.svg" alt="correct number wrong position">
+                        <img src="assets/icons/feedback_exact.svg" alt="correct number right position" class="icon-sign">
+                        <img src="assets/icons/feedback_misplaced.svg" alt="correct number wrong position" class="icon-sign">
                     </div>
                 </div>
                 <p class="example-context"><small>Either “7” or “1” is in the number but in the wrong position.</small>
@@ -114,9 +115,9 @@
                 <div class="example-number">
                     <p>Your guess: <span class="guess">4 2 7</span></p>
                     <div class="feedback-group">
-                        <img src="assets/feedback_exact.svg" alt="correct number right position">
-                        <img src="assets/feedback_exact.svg" alt="correct number right position">
-                        <img src="assets/feedback_exact.svg" alt="correct number right position">
+                        <img src="assets/icons/feedback_exact.svg" alt="correct number right position" class="icon-sign">
+                        <img src="assets/icons/feedback_exact.svg" alt="correct number right position" class="icon-sign">
+                        <img src="assets/icons/feedback_exact.svg" alt="correct number right position" class="icon-sign">
                     </div>
                 </div>
                 <p class="example-context"><small>All correct! You win!</small></p>
@@ -124,80 +125,62 @@
         </div>
 
         <h4>Winning</h4>
-        <p>The first player to get three “+” symbols wins. If both players guess correctly in the same round, the
-            winner is determined by who had fewer total guesses.</p>
+        <p>The first player to get three “+” symbols wins. If both players guess correctly in the same round, the winner
+            is determined by who had fewer total guesses.</p>
     </div>
-
-
 
     <!-- Gameplay Section -->
     <div class="gameplay hidden">
         <div id="game-status" class="container">
             <div id="status-round">
                 <p>Round:</p>
-                <span class="badge" id="badge-round">2</span>
+                <span class="badge" id="badge-round">1</span>
             </div>
             <div id="status-number">
                 <p>Your secret number:</p>
-                <span class="badge" id="badge-player">456</span>
+                <span class="badge" id="badge-player-secret">---</span>
             </div>
         </div>
 
         <div id="gameplay-frame">
-            <div id="player-guesses" class="container-gameplay">
+            <div class="container-gameplay" id="player-guesses-list">
                 <h4>Your guesses</h4>
+                <span class="no-guesses">No guesses yet</span>
             </div>
-            <div id="computer-guesses" class="container-gameplay">
+            <div class="container-gameplay" id="computer-guesses-list">
                 <h4>Computer's guesses</h4>
-                <div class="guess-round">
-                    <span class="guess">4 2 7</span>
-                    <div class="feedback-group">
-                        <img src="assets/feedback_exact.svg" alt="correct number right position"
-                            class="feedback-exact">
-                        <img src="assets/feedback_misplaced.svg" alt="correct number wrong position"
-                            class="feedback-misplaced">
-                        <img src="assets/feedback_exact.svg" alt="correct number right position"
-                            class="feedback-exact">
-                    </div>
-                </div>
-                <div class="winner-call">
-                    <p>🎉 Winner!</p>
-                </div>
+                <span class="no-guesses">No guesses yet</span>
             </div>
         </div>
 
         <div id="currentTurn_frame" class="container">
-            <span class="badge" id="turn"></span>
-            <input type="number" min="123" max="987" placeholder="Enter 3 digits">
-            <button type="submit">Guess</button>
+            <div id="currentTurn_content">
+                <div id="turn-indicator" class="turn-badge blue" style="text-align: center;">Your turn!</div>
+                <input type="number" id="guess-input" min="123" max="987" placeholder="Enter 3 digits">
+                <div id="error-msg"></div>
+                <button type="submit" id="guess-btn" style="width:100%;">Guess</button>
+            </div>
         </div>
-    </div>
 
-    <div id="results" class="container">
-        <h2 id="winner"></h2>
-        <div id="announcement">
-            <p id="winner-p"></p>
-            <p> guessed </p>
-            <p id="loser-p"></p>
-            <p>'s secret number in </p>
-            <p id="numRounds-p"></p>
-            <p> guesses!</p>
-        </div>
-        <div id="results-grid">
-            <div class="result-item">
-                <p>Computer's number:</p>
-                <span class="badge" id="badge-computer"></span>
+        <!-- Results container below guesses -->
+        <div id="results-frame" class="container">
+            <h3 id="winner-title"></h3>
+            <p id="results-details"></p>
+            <div id="results-grid">
+                <div class="result-item">
+                    <p>Computer's number:</p>
+                    <span class="badge purple" id="badge-computer-result"></span>
+                </div>
+                <div class="result-item">
+                    <p>Your Number:</p>
+                    <span class="badge blue" id="badge-player-result"></span>
+                </div>
             </div>
-            <div class="result-item">
-                <p>Your Number:</p>
-                <span class="badge" id="badge-player"></span>
-            </div>
+            <button type="submit" id="restart-btn">Play again</button>
         </div>
-        <button type="submit" id="btn-restart">Play again</button>
     </div>
 
     <script src="script.js"></script>
 </body>
 
 </html>
-

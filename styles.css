@@ -4,8 +4,7 @@
 
 html, body {
     background-color: #F9FAFB;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-                 Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-size: 14px;
     height: 100%;
     line-height: 1.6;
@@ -17,13 +16,13 @@ h1, h2, h3, h4, h5 {
     margin: 0 0 0.5rem 0;
 }
 
-h1 { font-size: 2rem; text-align: center; }
-h2 { font-size: 1.5rem; }
-h3 { font-size: 1.25rem; }
-h4 { font-size: 1.1rem; }
+h1 { font-size: 2.2rem; text-align: center; }
+h2 { font-size: 1.6rem; }
+h3 { font-size: 1.4rem; font-weight: 500;}
+h4 { font-size: 1.2rem; font-weight: 500; }
 
 p, li { color: #4A5565; font-size: 1rem; }
-small { font-size: 0.8rem; }
+small { font-size: 0.95rem; }
 #span-bold { font-weight: bold; }
 
 .hidden { display: none !important; }
@@ -60,7 +59,7 @@ small { font-size: 0.8rem; }
     align-items: center;
     display: flex;
     justify-content: center;
-    padding: 10px 0;
+    padding-top: 10px;
     position: relative;
     width: 100%;
 }
@@ -86,8 +85,8 @@ small { font-size: 0.8rem; }
 }
 
 #help-btn img, #close-btn img {
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 #help-btn {
@@ -103,17 +102,34 @@ small { font-size: 0.8rem; }
 
 #setup-frame {
     box-sizing: border-box;
+    align-items: center;
     text-align: center;
     width: 448px;
+    max-width: 100%;
 }
 
-#setup-frame input[type="number"] {
-    border: 1px solid #ccc;
+input[type="number"] {
+    background-color: #f3f3f5;
     border-radius: 6px;
-    box-sizing: border-box;
-    margin: 10px 0;
-    padding: 8px;
+    height: 2.5rem;
     width: 100%;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    text-align: center;
+    letter-spacing: 5px;
+}
+
+/*
+:focus {
+    outline: 0.5px solid #cfcfcf;
+}
+    */
+
+#setup-frame input {
+    margin-bottom: 10px;
+}
+
+#setup-frame button {
+    width: 60%;
 }
 
 /* -------------------------------------------------- */
@@ -121,19 +137,27 @@ small { font-size: 0.8rem; }
 /* -------------------------------------------------- */
 
 button {
-    background: #030213;
+    background: #1c1b2a;
     border: none;
     border-radius: 8px;
     color: white;
     cursor: pointer;
-    padding: 8px 16px;
+    /*padding: 8px 16px;*/
+    font-weight: 600;
+    height: 2.5rem;
 }
 
-#results button {
+#results-frame button, #restart-btn {
     align-self: center;
     margin-top: 25px;
     padding: 8px 16px;
     width: auto;
+}
+
+#results-frame button {
+    background: white;
+    color: #4b4e58;
+    border: 0.5px solid #d1d5db !important;
 }
 
 /* -------------------------------------------------- */
@@ -168,6 +192,7 @@ button {
     top: 50%;
     transform: translate(-50%, -50%);
     width: 505px;
+    max-width: 90%;
     z-index: 200;
 }
 
@@ -186,7 +211,7 @@ button {
     display: flex;
     justify-content: center;
     margin: 0.5rem 0;
-    padding: 5px 10px;
+    padding: 10px;
 }
 
 .callout p {
@@ -237,15 +262,69 @@ button {
     justify-content: flex-end;
 }
 
+.turn-badge {
+    border-radius: 30px;
+    width: 40%;
+    padding: 6px 10px;
+    text-align: center;
+}
+
+#badge-round {
+    background-color: rgb(255, 255, 255);
+    border: 0.5px solid #dfe1e6;
+    color: grey;
+}
+
+.turn-badge.blue {
+    color: #1946B8 ; 
+    background-color: #DBEAFE;  
+}
+
+.turn-badge.purple {
+    color: #6619B8 ;
+    background-color:#F3E8FF;
+}
+
+#currentTurn_frame {
+    display: flex;
+    flex-direction: column;       
+    align-items: center;        
+}
+
+
+#currentTurn_content {
+    display: grid;
+    grid-auto-flow: row;
+    width: 30%;
+    margin: 5px;
+    gap: 10px;
+    align-items: center;
+    justify-items: center;
+    min-height: 160px;
+    height: 160px;
+}
+
+#currentTurn_content > * {
+    margin: 0 !important;
+}
+
 .badge {
     background-color: #193CB8;
     border-radius: 6px;
     color: white;
-    font-family: Consolas;
+    font-family: Consolas, monospace;
     font-weight: bold;
     display: inline-block;
     padding: 0.25rem 0.5rem;
     text-align: center;
+}
+
+.badge.purple {
+    background-color: #6619b8;
+}
+
+.badge.blue {
+    background-color: #193CB8;
 }
 
 /* -------------------------------------------------- */
@@ -260,20 +339,42 @@ button {
     margin: 0 auto;
     max-width: 900px;
     width: 100%;
+    padding-bottom: 50px;
+}
+
+.gameplay .container {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 #gameplay-frame {
     display: flex;
     gap: 10px;
     justify-content: space-between;
+    flex-wrap: wrap;
+    flex-direction: row;
 }
 
 .container-gameplay {
     background: #FFF;
     border: 1px solid rgba(0,0,0,0.10);
     border-radius: 14px;
-    padding: 10px 24px;
-    width: 50%;
+    padding: 2rem;
+    /* justify-content: center; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1;
+    min-height: 4rem;
+    gap: 0.75rem;
+    min-width: 300px;
+}
+
+.container-gameplay h4 {
+    font-weight: normal !important;
+}
+
+.no-guesses {
+    color: #99A1AF;
 }
 
 .guess-round {
@@ -286,8 +387,25 @@ button {
     padding: 10px;
 }
 
-.feedback-group { display: flex; gap: 0.25rem; }
-.feedback-exact, .feedback-misplaced { visibility: hidden; }
+.feedback-group {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+}
+/*
+
+.feedback-group img {
+    width: 20px;
+    height: 20px;
+}*/
+
+.icon-sign {
+    width: 25px;   /* choose the size you want */
+    height: 25px;
+    display: inline-block;  /* or block if needed */
+    vertical-align: middle; /* aligns nicely with text */
+}
+
 
 /* -------------------------------------------------- */
 /*                   EXAMPLES / LEGEND                */
@@ -307,7 +425,7 @@ button {
 
 .guess {
     color: #4A5565;
-    font-family: Consolas;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     font-weight: 700;
     padding-left: 1rem;
 }
@@ -326,31 +444,13 @@ button {
 /*                       RESULTS                      */
 /* -------------------------------------------------- */
 
-#winner,
-#announcement,
-#results-grid {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.winner-call {
-    background: #DAFADF;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    min-height: 30px;
-}
-
-#results {
+#results-frame {
     align-items: center;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin: 0 auto;
     max-width: 900px;
-    min-height: 35vh;
     text-align: center;
     width: 100%;
 }
@@ -367,5 +467,42 @@ button {
     display: flex;
     flex-direction: column;
     font-weight: bold;
-    gap: 0.25rem;
+}
+
+.winner-call {
+    background: #DAFADF;
+    color: #134728;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;        /* vertically center text */
+    margin-top: 10px;
+    min-height: 30px;           /* same as .guess-round */
+    padding: 10px;              /* match .guess-round padding */
+    font-weight: bold;
+}
+
+
+#results-frame button:hover {
+    background-color: #f3f4f6;
+}
+
+/* -------------------------------------------------- */
+/*                     ERROR MESSAGES                 */
+/* -------------------------------------------------- */
+
+#error-msg, #setup-error-msg {
+    color: #DC2626;
+    font-size: 0.9rem;
+    /*min-height: 1.5rem;*/
+    margin-top: 5px;
+}
+
+/* -------------------------------------------------- */
+/*                       MOBILE                        */
+/* -------------------------------------------------- */
+
+@media (max-width: 700px) {
+    #gameplay-frame { flex-direction: column; }
+    .container-gameplay { width: 100%; min-height: 200px; max-height: 300px; }
 }

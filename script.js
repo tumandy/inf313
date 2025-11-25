@@ -1,70 +1,304 @@
-// script.js
+/* -------------------------------------------------- */
+/* GAME LOGIC CLASS                                   */
+/* -------------------------------------------------- */
+class GameState {
+    constructor() {
+        this.round = 1;
+        this.maxRounds = 7;
+        this.playerSecret = "";
+        this.computerSecret = "";
+        this.playerGuesses = 0;
+        this.computerGuesses = 0;
+        this.gameOver = false;
+        this.cpuCandidates = this.generateAllCandidates();
+    }
 
-// Elements
-const instructions = document.getElementById("instructions");
+    generateAllCandidates() {
+        const candidates = [];
+        for (let i = 1; i <= 9; i++) {
+            for (let j = 1; j <= 9; j++) {
+                if (i === j) continue;
+                for (let k = 1; k <= 9; k++) {
+                    if (k === i || k === j) continue;
+                    candidates.push(`${i}${j}${k}`);
+                }
+            }
+        }
+        return candidates;
+    }
+
+    generateSecret() {
+        const idx = Math.floor(Math.random() * this.generateAllCandidates().length);
+        return this.generateAllCandidates()[idx];
+    }
+
+    getFeedback(secret, guess) {
+        let exact = 0, misplaced = 0;
+        for (let i = 0; i < 3; i++) {
+            if (guess[i] === secret[i]) exact++;
+            else if (secret.includes(guess[i])) misplaced++;
+        }
+        return { exact, misplaced };
+    }
+
+    filterCandidates(guess, feedback) {
+        this.cpuCandidates = this.cpuCandidates.filter(candidate => {
+            const sim = this.getFeedback(candidate, guess);
+            return sim.exact === feedback.exact && sim.misplaced === feedback.misplaced;
+        });
+    }
+
+    getCpuGuess() {
+        if (this.cpuCandidates.length === 0) return "123";
+        const idx = Math.floor(Math.random() * this.cpuCandidates.length);
+        return this.cpuCandidates[idx];
+    }
+}
+
+/* -------------------------------------------------- */
+/* UI CONTROLLER                                      */
+/* -------------------------------------------------- */
+const game = new GameState();
+
+// Overlay & Instructions
 const overlay = document.getElementById("overlay");
-const closeBtn = document.getElementById("close-btn");
+const instructions = document.getElementById("instructions");
 const helpBtn = document.getElementById("help-btn");
-const startBtn = document.getElementById("start");
-const setup = document.getElementById("setup-frame");
-const gameplay = document.querySelector(".gameplay");
-const results = document.getElementById("results")
+const closeBtn = document.getElementById("close-btn");
 
-// Test Data
-const dummyWinner = "Player";
-const dummyLoser = "Computer";
-const dummyRounds = 5;
-const dummyPlayerNumber = "427";
-const dummyComputerNumber = "459";
+// Setup elements
+const setupFrame = document.getElementById("setup-frame");
+const setupInput = document.getElementById("setup-input");
+const startBtn = document.getElementById("start-btn");
+const setupError = document.createElement("p");
+setupError.style.color = "#DC2626";
+setupFrame.appendChild(setupError);
 
-const winner = document.getElementById("winner");
-const winnerP = document.getElementById("winner-p");
-const loserP = document.getElementById("loser-p");
-const numRoundsP = document.getElementById("numRounds-p");
-const badgePlayer = document.querySelector("#results #badge-player");
-const badgeComputer = document.querySelector("#results #badge-computer")
+// Gameplay elements
+const gameplayFrame = document.querySelector(".gameplay");
+const gameplay = document.getElementById("gameplay-frame")
+const playerList = document.getElementById("player-guesses-list");
+const computerList = document.getElementById("computer-guesses-list");
+const zeroGuesses = document.getElementsByClassName("no-guesses");
+const roundBadge = document.getElementById("badge-round");
+const playerSecretBadge = document.getElementById("badge-player-secret");
 
-// Show instructions on page load
+const turnBadge = document.getElementById("turn-indicator");
+const guessInput = document.getElementById("guess-input");
+const guessBtn = document.getElementById("guess-btn");
+const gameError = document.createElement("p");
+gameError.style.color = "#DC2626";
+const currentTurnFrame = document.getElementById("currentTurn_frame");
+document.getElementById("currentTurn_content").appendChild(gameError);
+
+// Results
+const resultsFrame = document.getElementById("results-frame");
+const resCompBadge = document.getElementById("badge-computer-result");
+const resPlayBadge = document.getElementById("badge-player-result");
+const winnerTitle = document.getElementById("winner-title");
+const restartBtn = document.getElementById("restart-btn");
+const resultsDetails = document.getElementById("results-details");
+
+/* --- Event Listeners --- */
 window.onload = () => {
-    overlay.style.display = "block";
+    overlay.classList.remove("hidden");
     instructions.classList.remove("hidden");
-    overlay.classList.remove("hidden")
-    setup.classList.remove("hidden");
 };
 
-window.addEventListener("DOMContentLoaded", () => {
-    const overlay = document.getElementById("overlay");
-    overlay.classList.remove("hidden"); // show overlay on load
-});
-
-
-// Close instructions
 closeBtn.addEventListener("click", () => {
-    instructions.classList.add("hidden");
     overlay.classList.add("hidden");
-    setup.classList.remove("hidden");
+    instructions.classList.add("hidden");
 });
 
-// Re-open instructions using help button
+overlay.addEventListener("click", (e) => {
+    // If the click is directly on the overlay, not inside instructions
+    if (!instructions.contains(e.target)) {
+        overlay.classList.add("hidden");
+        instructions.classList.add("hidden");
+    }
+});
+
 helpBtn.addEventListener("click", () => {
-    instructions.classList.remove("hidden");
     overlay.classList.remove("hidden");
+    instructions.classList.remove("hidden");
 });
 
-// Start game: hide setup, show gameplay
-startBtn.addEventListener("click", () => {
-    setup.classList.add("hidden");
-    gameplay.classList.remove("hidden");
-    results.classList.add("hidden");
-});
+startBtn.addEventListener("click", startGame);
+guessBtn.addEventListener("click", handleTurn);
+restartBtn.addEventListener("click", resetGame);
 
-winner.textContent = `${dummyWinner} Wins!`;
-winnerP.textContent = dummyWinner;
-loserP.textContent = dummyLoser;
-numRoundsP.textContent = dummyRounds;
-badgePlayer.textContent = dummyPlayerNumber;
-badgeComputer.textContent = dummyComputerNumber;
+guessInput.addEventListener("keypress", e => { if (e.key === "Enter") handleTurn(); });
+setupInput.addEventListener("keypress", e => { if (e.key === "Enter") startGame(); });
 
-badgePlayer.style.backgroundColor = "#155DFC";
-badgeComputer.style.backgroundColor = "#6619B8";
-winner.style.color = "#155DFC;"
+/* --- FUNCTIONS --- */
+function isValid(numStr) {
+    if (!numStr || numStr.length !== 3) return "Must be 3 digits.";
+    if (!/^\d+$/.test(numStr)) return "Digits only.";
+    if (numStr.includes("0")) return "Digits 1–9 only.";
+    if (new Set(numStr).size !== 3) return "Digits must be unique.";
+    return null;
+}
+
+function createFeedbackHTML(feedback) {
+    let html = '<div class="feedback-group">';
+    for (let i = 0; i < feedback.exact; i++) html += '<img src="assets/icons/feedback_exact.svg">';
+    for (let i = 0; i < feedback.misplaced; i++) html += '<img src="assets/icons/feedback_misplaced.svg">';
+    if (feedback.exact === 0 && feedback.misplaced === 0) html += '<span style="color:#ccc; font-weight:bold;">-</span>';
+    html += '</div>';
+    return html;
+}
+
+function addGuessRow(container, guess, feedback) {
+    Array.from(zeroGuesses).forEach(z => z.style.display = "none");
+    const row = document.createElement("div");
+    row.className = "guess-round";
+    row.innerHTML = `<span class="guess">${guess.split("").join(" ")}</span>${createFeedbackHTML(feedback)}`;
+    container.appendChild(row);
+    container.scrollTop = container.scrollHeight;
+}
+
+function updateTurnBadge(isPlayerTurn) {
+    if (isPlayerTurn) {
+        turnBadge.textContent = "Your Turn!";
+        turnBadge.classList.remove("purple");
+        turnBadge.classList.add("blue");
+        guessInput.style.display = "block";
+        guessBtn.style.display = "block";
+    } else {
+        turnBadge.textContent = "Computer's Turn";
+        turnBadge.classList.remove("blue");
+        turnBadge.classList.add("purple");
+        guessInput.style.display = "none";
+        guessBtn.style.display = "none";
+    }
+}
+
+function startGame() {
+    const val = setupInput.value.toString();
+    const error = isValid(val);
+    if (error) {
+        setupError.textContent = error;
+        return;
+    }
+
+    game.playerSecret = val;
+    game.computerSecret = game.generateSecret();
+    game.round = 1;
+    game.gameOver = false;
+    game.playerGuesses = 0;
+    game.computerGuesses = 0;
+    game.cpuCandidates = game.generateAllCandidates();
+
+    setupError.textContent = "";
+    setupFrame.classList.add("hidden");
+    gameplayFrame.classList.remove("hidden");
+    resultsFrame.classList.add("hidden");
+
+    // Reset guess displays
+    playerList.innerHTML = '<h4>Your guesses</h4><span class="no-guesses">No guesses yet</span>';
+    computerList.innerHTML = '<h4>Computer\'s guesses</h4><span class="no-guesses">No guesses yet</span>';
+
+    roundBadge.textContent = game.round;
+    playerSecretBadge.textContent = game.playerSecret;
+
+    guessInput.value = "";
+    guessInput.disabled = false;
+    guessBtn.disabled = false;
+
+    updateTurnBadge(true);
+    guessInput.focus();
+}
+
+function handleTurn() {
+    if (game.gameOver) return;
+
+    const playerGuess = guessInput.value.toString();
+    const error = isValid(playerGuess);
+    if (error) {
+        gameError.textContent = error;
+        return;
+    }
+    gameError.textContent = "";
+
+    game.playerGuesses++;
+    addGuessRow(playerList, playerGuess, game.getFeedback(game.computerSecret, playerGuess));
+
+    if (playerGuess === game.computerSecret) {
+        endGame("Player");
+        return;
+    }
+
+    // Clear input for next round
+    guessInput.value = "";  
+    guessInput.focus();
+
+    // Disable input while computer "thinks"
+    updateTurnBadge(false);
+
+    setTimeout(() => {
+        const cpuGuess = game.getCpuGuess();
+        game.computerGuesses++;
+        const cpuFeedback = game.getFeedback(game.playerSecret, cpuGuess);
+        game.filterCandidates(cpuGuess, cpuFeedback);
+        addGuessRow(computerList, cpuGuess, cpuFeedback);
+
+        if (cpuGuess === game.playerSecret) {
+            endGame("Computer");
+            return;
+        }
+
+        // Increment round
+        game.round++;
+        roundBadge.textContent = game.round;
+
+        // Back to player
+        updateTurnBadge(true);
+        guessInput.disabled = false;
+        guessBtn.disabled = false;
+        guessInput.focus();
+    }, 800); // small delay to simulate thinking
+}
+
+function endGame(winner) {
+    game.gameOver = true;
+    guessInput.disabled = true;
+    guessBtn.disabled = true;
+
+    resultsFrame.classList.remove("hidden");
+    currentTurnFrame.classList.add("hidden");
+
+    resCompBadge.textContent = game.computerSecret;
+    resCompBadge.classList.remove("blue")
+    resCompBadge.classList.add("purple")
+    resPlayBadge.textContent = game.playerSecret;
+
+    const winnerDiv = document.createElement("div");
+    winnerDiv.className = "winner-call";
+    winnerDiv.innerHTML = "🎉Winner!";
+
+    if (winner === "Player") {
+        playerList.appendChild(winnerDiv);
+        winnerTitle.textContent = "You win!";
+        resultsDetails.innerHTML = `You guessed Computer's secret number in ${game.playerGuesses} guess${game.playerGuesses > 1 ? 'es': ''}!`;
+    }
+    else if (winner === "Computer") {
+        computerList.appendChild(winnerDiv); 
+        winnerTitle.textContent = "Computer wins!";
+        resultsDetails.innerHTML = `The Computer guessed your secret number in ${game.computerGuesses} guess${game.computerGuesses > 1 ? 'es': ''}!`;
+    }
+    else {
+        winnerTitle.textContent = "It's a draw!";
+        resultDetails.innerHTML = "No one was able to guess correctly after 7 rounds!"
+    } 
+}
+
+function resetGame() {
+    resultsFrame.classList.add("hidden");
+    setupFrame.classList.remove("hidden");
+    setupInput.value = "";
+    gameError.textContent = "";
+    setupError.textContent = "";
+
+    const newGame = new GameState();
+    Object.assign(game, newGame);
+}
