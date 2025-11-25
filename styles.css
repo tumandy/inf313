@@ -118,12 +118,6 @@ input[type="number"] {
     letter-spacing: 5px;
 }
 
-/*
-:focus {
-    outline: 0.5px solid #cfcfcf;
-}
-    */
-
 #setup-frame input {
     margin-bottom: 10px;
 }
@@ -400,10 +394,10 @@ button {
 }*/
 
 .icon-sign {
-    width: 25px;   /* choose the size you want */
+    width: 25px;   
     height: 25px;
-    display: inline-block;  /* or block if needed */
-    vertical-align: middle; /* aligns nicely with text */
+    display: inline-block;  
+    vertical-align: middle; 
 }
 
 
@@ -475,10 +469,10 @@ button {
     border-radius: 10px;
     display: flex;
     justify-content: center;
-    align-items: center;        /* vertically center text */
+    align-items: center;      
     margin-top: 10px;
-    min-height: 30px;           /* same as .guess-round */
-    padding: 10px;              /* match .guess-round padding */
+    min-height: 30px;       
+    padding: 10px;             
     font-weight: bold;
 }
 
@@ -506,4 +500,5 @@ button {
     #gameplay-frame { flex-direction: column; }
     .container-gameplay { width: 100%; min-height: 200px; max-height: 300px; }
 }
+
 
