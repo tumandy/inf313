@@ -117,7 +117,7 @@ input[type="number"] {
     border-radius: 6px;
     height: 2.5rem;
     width: 100%;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-family: Consolas, monospace;
     text-align: center;
     letter-spacing: 5px;
 }
@@ -394,7 +394,7 @@ button {
 
 .guess {
     color: #4A5565;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-family: Consolas, monospace;
     font-weight: 700;
     padding-left: 1rem;
 }
