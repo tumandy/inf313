@@ -28,6 +28,32 @@ small { font-size: 0.95rem; }
 .hidden { display: none !important; }
 
 /* -------------------------------------------------- */
+/*                     ASSETS                         */
+/* -------------------------------------------------- */
+.icon-sign {
+    width: 25px; 
+    height: 25px;
+    display: inline-block;  
+    vertical-align: middle; 
+}
+
+#help-btn img, #close-btn img {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.badge {
+    background-color: #193CB8;
+    border-radius: 6px;
+    color: white;
+    font-family: Consolas, monospace;
+    font-weight: bold;
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    text-align: center;
+}
+
+/* -------------------------------------------------- */
 /*                     LAYOUT: CONTAINERS             */
 /* -------------------------------------------------- */
 
@@ -73,29 +99,6 @@ small { font-size: 0.95rem; }
     text-align: center;
 }
 
-/* Help / Close Buttons */
-#help-btn, #close-btn {
-    align-items: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    padding: 0;
-}
-
-#help-btn img, #close-btn img {
-    width: 1.5rem;
-    height: 1.5rem;
-}
-
-#help-btn {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
 /* -------------------------------------------------- */
 /*                        SETUP                       */
 /* -------------------------------------------------- */
@@ -106,6 +109,7 @@ small { font-size: 0.95rem; }
     text-align: center;
     width: 448px;
     max-width: 100%;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 input[type="number"] {
@@ -113,17 +117,13 @@ input[type="number"] {
     border-radius: 6px;
     height: 2.5rem;
     width: 100%;
-    font-family: 'Inconsolata', monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     text-align: center;
     letter-spacing: 5px;
 }
 
 #setup-frame input {
     margin-bottom: 10px;
-}
-
-#setup-frame button {
-    width: 60%;
 }
 
 /* -------------------------------------------------- */
@@ -141,6 +141,27 @@ button {
     height: 2.5rem;
 }
 
+#help-btn, #close-btn {
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+#help-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#setup-frame button {
+    width: 60%;
+}
+
 #results-frame button, #restart-btn {
     align-self: center;
     margin-top: 25px;
@@ -153,6 +174,11 @@ button {
     color: #4b4e58;
     border: 0.5px solid #d1d5db !important;
 }
+
+#results-frame button:hover {
+    background-color: #f3f4f6;
+}
+
 
 /* -------------------------------------------------- */
 /*                        OVERLAY                     */
@@ -196,7 +222,7 @@ button {
     justify-content: space-between;
 }
 
-/* Callouts */
+/*----------Callouts---------*/
 .callout {
     align-items: center;
     background: #EFF6FF;
@@ -256,35 +282,23 @@ button {
     justify-content: flex-end;
 }
 
-.turn-badge {
-    border-radius: 30px;
-    width: 40%;
-    padding: 6px 10px;
-    text-align: center;
-}
-
 #badge-round {
     background-color: rgb(255, 255, 255);
     border: 0.5px solid #dfe1e6;
     color: grey;
 }
 
-.turn-badge.blue {
-    color: #1946B8 ; 
-    background-color: #DBEAFE;  
-}
 
-.turn-badge.purple {
-    color: #6619B8 ;
-    background-color:#F3E8FF;
-}
+/* -------------------------------------------------- */
+/*               CURRENT ROUND BEHAVIOUR              */
+/* -------------------------------------------------- */
 
 #currentTurn_frame {
     display: flex;
     flex-direction: column;       
     align-items: center;        
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
-
 
 #currentTurn_content {
     display: grid;
@@ -302,16 +316,6 @@ button {
     margin: 0 !important;
 }
 
-.badge {
-    background-color: #193CB8;
-    border-radius: 6px;
-    color: white;
-    font-family: Consolas, monospace;
-    font-weight: bold;
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    text-align: center;
-}
 
 .badge.purple {
     background-color: #6619b8;
@@ -320,6 +324,24 @@ button {
 .badge.blue {
     background-color: #193CB8;
 }
+
+.turn-badge {
+    border-radius: 30px;
+    width: 40%;
+    padding: 6px 10px;
+    text-align: center;
+}
+
+.turn-badge.blue {
+    color: #1946B8 ; 
+    background-color: #DBEAFE;  
+}
+
+.turn-badge.purple {
+    color: #6619B8 ;
+    background-color:#F3E8FF;
+}
+
 
 /* -------------------------------------------------- */
 /*                     GAMEPLAY                       */
@@ -353,7 +375,6 @@ button {
     border: 1px solid rgba(0,0,0,0.10);
     border-radius: 14px;
     padding: 2rem;
-    /* justify-content: center; */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -371,6 +392,19 @@ button {
     color: #99A1AF;
 }
 
+.guess {
+    color: #4A5565;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-weight: 700;
+    padding-left: 1rem;
+}
+
+.feedback-group {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+}
+
 .guess-round {
     align-items: center;
     background-color: #F9FAFB;
@@ -379,25 +413,6 @@ button {
     justify-content: space-between;
     min-height: 30px;
     padding: 10px;
-}
-
-.feedback-group {
-    display: flex;
-    gap: 0.25rem;
-    align-items: center;
-}
-/*
-
-.feedback-group img {
-    width: 20px;
-    height: 20px;
-}*/
-
-.icon-sign {
-    width: 25px;   
-    height: 25px;
-    display: inline-block;  
-    vertical-align: middle; 
 }
 
 
@@ -416,13 +431,6 @@ button {
 .example-row  { display: flex; flex-direction: column; gap: 0.25rem; }
 .example-number { display: flex; justify-content: space-between; align-items: center; }
 .example-context { font-size: 0.75rem; margin-top: -0.5rem; }
-
-.guess {
-    color: #4A5565;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    font-weight: 700;
-    padding-left: 1rem;
-}
 
 #legend-grid {
     align-items: center;
@@ -447,6 +455,7 @@ button {
     max-width: 900px;
     text-align: center;
     width: 100%;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 #results-grid {
@@ -469,17 +478,13 @@ button {
     border-radius: 10px;
     display: flex;
     justify-content: center;
-    align-items: center;      
+    align-items: center;        /* vertically center text */
     margin-top: 10px;
-    min-height: 30px;       
-    padding: 10px;             
+    min-height: 30px;           /* same as .guess-round */
+    padding: 10px;              /* match .guess-round padding */
     font-weight: bold;
 }
 
-
-#results-frame button:hover {
-    background-color: #f3f4f6;
-}
 
 /* -------------------------------------------------- */
 /*                     ERROR MESSAGES                 */
@@ -500,5 +505,3 @@ button {
     #gameplay-frame { flex-direction: column; }
     .container-gameplay { width: 100%; min-height: 200px; max-height: 300px; }
 }
-
-

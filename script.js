@@ -3,53 +3,53 @@
 /* -------------------------------------------------- */
 class GameState {
     constructor() {
-        this.round = 1;
-        this.maxRounds = 7;
-        this.playerSecret = "";
-        this.computerSecret = "";
-        this.playerGuesses = 0;
+        this.round = 1;                  // Current round
+        this.maxRounds = 7;              // Max rounds allowed
+        this.playerSecret = "";           // Player's secret number
+        this.computerSecret = "";         // CPU's secret number
+        this.playerGuesses = 0;          
         this.computerGuesses = 0;
         this.gameOver = false;
-        this.cpuCandidates = this.generateAllCandidates();
+        this.cpuCandidates = this.generateAllCandidates(); // All possible CPU guesses
     }
 
     generateAllCandidates() {
         const candidates = [];
         for (let i = 1; i <= 9; i++) {
             for (let j = 1; j <= 9; j++) {
-                if (i === j) continue;
+                if (i === j) continue;             // Skip duplicates
                 for (let k = 1; k <= 9; k++) {
                     if (k === i || k === j) continue;
-                    candidates.push(`${i}${j}${k}`);
+                    candidates.push(`${i}${j}${k}`); // Unique 3-digit string
                 }
             }
         }
         return candidates;
     }
 
-    generateSecret() {
+    generateSecret() {                   // Random secret number
         const idx = Math.floor(Math.random() * this.generateAllCandidates().length);
         return this.generateAllCandidates()[idx];
     }
 
-    getFeedback(secret, guess) {
+    getFeedback(secret, guess) {        // Compute exact & misplaced digits
         let exact = 0, misplaced = 0;
         for (let i = 0; i < 3; i++) {
-            if (guess[i] === secret[i]) exact++;
-            else if (secret.includes(guess[i])) misplaced++;
+            if (guess[i] === secret[i]) exact++;          // Correct digit & position
+            else if (secret.includes(guess[i])) misplaced++; // Correct digit, wrong position
         }
         return { exact, misplaced };
     }
 
-    filterCandidates(guess, feedback) {
+    filterCandidates(guess, feedback) { // Keep only candidates matching feedback
         this.cpuCandidates = this.cpuCandidates.filter(candidate => {
             const sim = this.getFeedback(candidate, guess);
             return sim.exact === feedback.exact && sim.misplaced === feedback.misplaced;
         });
     }
 
-    getCpuGuess() {
-        if (this.cpuCandidates.length === 0) return "123";
+    getCpuGuess() {                      // Pick random remaining candidate
+        if (this.cpuCandidates.length === 0) return "123"; // fallback
         const idx = Math.floor(Math.random() * this.cpuCandidates.length);
         return this.cpuCandidates[idx];
     }
@@ -76,7 +76,7 @@ setupFrame.appendChild(setupError);
 
 // Gameplay elements
 const gameplayFrame = document.querySelector(".gameplay");
-const gameplay = document.getElementById("gameplay-frame")
+const gameplay = document.getElementById("gameplay-frame");
 const playerList = document.getElementById("player-guesses-list");
 const computerList = document.getElementById("computer-guesses-list");
 const zeroGuesses = document.getElementsByClassName("no-guesses");
@@ -101,24 +101,23 @@ const resultsDetails = document.getElementById("results-details");
 
 /* --- Event Listeners --- */
 window.onload = () => {
-    overlay.classList.remove("hidden");
+    overlay.classList.remove("hidden");     // Show instructions initially
     instructions.classList.remove("hidden");
 };
 
-closeBtn.addEventListener("click", () => {
+closeBtn.addEventListener("click", () => { // Close instructions
     overlay.classList.add("hidden");
     instructions.classList.add("hidden");
 });
 
-overlay.addEventListener("click", (e) => {
-    // If the click is directly on the overlay, not inside instructions
+overlay.addEventListener("click", (e) => { // Close if click outside instructions
     if (!instructions.contains(e.target)) {
         overlay.classList.add("hidden");
         instructions.classList.add("hidden");
     }
 });
 
-helpBtn.addEventListener("click", () => {
+helpBtn.addEventListener("click", () => {  // Reopen instructions
     overlay.classList.remove("hidden");
     instructions.classList.remove("hidden");
 });
@@ -131,7 +130,7 @@ guessInput.addEventListener("keypress", e => { if (e.key === "Enter") handleTurn
 setupInput.addEventListener("keypress", e => { if (e.key === "Enter") startGame(); });
 
 /* --- FUNCTIONS --- */
-function isValid(numStr) {
+function isValid(numStr) { // Input validation
     if (!numStr || numStr.length !== 3) return "Must be 3 digits.";
     if (!/^\d+$/.test(numStr)) return "Digits only.";
     if (numStr.includes("0")) return "Digits 1–9 only.";
@@ -139,25 +138,25 @@ function isValid(numStr) {
     return null;
 }
 
-function createFeedbackHTML(feedback) {
+function createFeedbackHTML(feedback) { // Generate feedback icons
     let html = '<div class="feedback-group">';
     for (let i = 0; i < feedback.exact; i++) html += '<img src="assets/icons/feedback_exact.svg">';
     for (let i = 0; i < feedback.misplaced; i++) html += '<img src="assets/icons/feedback_misplaced.svg">';
-    if (feedback.exact === 0 && feedback.misplaced === 0) html += '<span style="color:#ccc; font-weight:bold;">-</span>';
+    if (feedback.exact === 0 && feedback.misplaced === 0) html += '<span style="color:#ccc; font-weight:bold;">-</span>'; // no matches
     html += '</div>';
     return html;
 }
 
-function addGuessRow(container, guess, feedback) {
-    Array.from(zeroGuesses).forEach(z => z.style.display = "none");
+function addGuessRow(container, guess, feedback) { // Add a guess to the UI
+    Array.from(zeroGuesses).forEach(z => z.style.display = "none"); // hide placeholder
     const row = document.createElement("div");
     row.className = "guess-round";
     row.innerHTML = `<span class="guess">${guess.split("").join(" ")}</span>${createFeedbackHTML(feedback)}`;
     container.appendChild(row);
-    container.scrollTop = container.scrollHeight;
+    container.scrollTop = container.scrollHeight; // scroll to latest
 }
 
-function updateTurnBadge(isPlayerTurn) {
+function updateTurnBadge(isPlayerTurn) { // Update UI for turn
     if (isPlayerTurn) {
         turnBadge.textContent = "Your Turn!";
         turnBadge.classList.remove("purple");
@@ -173,7 +172,7 @@ function updateTurnBadge(isPlayerTurn) {
     }
 }
 
-function startGame() {
+function startGame() { // Initialize a new game
     const val = setupInput.value.toString();
     const error = isValid(val);
     if (error) {
@@ -194,7 +193,6 @@ function startGame() {
     gameplayFrame.classList.remove("hidden");
     resultsFrame.classList.add("hidden");
 
-    // Reset guess displays
     playerList.innerHTML = '<h4>Your guesses</h4><span class="no-guesses">No guesses yet</span>';
     computerList.innerHTML = '<h4>Computer\'s guesses</h4><span class="no-guesses">No guesses yet</span>';
 
@@ -209,13 +207,14 @@ function startGame() {
     guessInput.focus();
 }
 
-function handleTurn() {
+function handleTurn() { // Player + CPU turn
     if (game.gameOver) return;
 
     const playerGuess = guessInput.value.toString();
     const error = isValid(playerGuess);
     if (error) {
         gameError.textContent = error;
+        guessInput.value = "";
         return;
     }
     gameError.textContent = "";
@@ -228,14 +227,12 @@ function handleTurn() {
         return;
     }
 
-    // Clear input for next round
     guessInput.value = "";  
     guessInput.focus();
 
-    // Disable input while computer "thinks"
     updateTurnBadge(false);
 
-    setTimeout(() => {
+    setTimeout(() => { // CPU turn with delay
         const cpuGuess = game.getCpuGuess();
         game.computerGuesses++;
         const cpuFeedback = game.getFeedback(game.playerSecret, cpuGuess);
@@ -247,25 +244,31 @@ function handleTurn() {
             return;
         }
 
-        // Increment round
         game.round++;
         roundBadge.textContent = game.round;
 
-        // Back to player
         updateTurnBadge(true);
         guessInput.disabled = false;
         guessBtn.disabled = false;
         guessInput.focus();
-    }, 800); // small delay to simulate thinking
+    }, 800);
 }
 
-function endGame(winner) {
+function endGame(winner) { // Display results
     game.gameOver = true;
     guessInput.disabled = true;
     guessBtn.disabled = true;
 
     resultsFrame.classList.remove("hidden");
     currentTurnFrame.classList.add("hidden");
+
+    // Wait for layout to update, then scroll
+    setTimeout(() => {
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth"
+        });
+    }, 50); // 50ms delay allows DOM to render
 
     resCompBadge.textContent = game.computerSecret;
     resCompBadge.classList.remove("blue")
@@ -274,8 +277,9 @@ function endGame(winner) {
 
     const winnerDiv = document.createElement("div");
     winnerDiv.className = "winner-call";
-    winnerDiv.innerHTML = "🎉Winner!";
+    winnerDiv.innerHTML = "🎉 Winner!";
 
+    // What message to show 
     if (winner === "Player") {
         playerList.appendChild(winnerDiv);
         winnerTitle.textContent = "You win!";
@@ -292,13 +296,27 @@ function endGame(winner) {
     } 
 }
 
-function resetGame() {
+function resetGame() { // Reset UI & state
+    // Go back to setup, then gameplay
     resultsFrame.classList.add("hidden");
+    gameplayFrame.classList.add("hidden");
+    currentTurnFrame.classList.remove("hidden");
     setupFrame.classList.remove("hidden");
+
+    // Clear inputs and errors
     setupInput.value = "";
+    guessInput.value = "";
     gameError.textContent = "";
     setupError.textContent = "";
 
+    // Clear results and status
+    playerList.innerHTML = '<h4>Your guesses</h4><span class="no-guesses">No guesses yet</span>';
+    computerList.innerHTML = '<h4>Computer\'s guesses</h4><span class="no-guesses">No guesses yet</span>';
+    roundBadge.textContent = "1";
+    playerSecretBadge.textContent = "";
+    turnBadge.textContent = "";
+    
+    // Reset game state
     const newGame = new GameState();
     Object.assign(game, newGame);
 }
