@@ -140,8 +140,8 @@ function isValid(numStr) { // Input validation
 
 function createFeedbackHTML(feedback) { // Generate feedback icons
     let html = '<div class="feedback-group">';
-    for (let i = 0; i < feedback.exact; i++) html += '<img src="assets/icons/feedback_exact.svg">';
-    for (let i = 0; i < feedback.misplaced; i++) html += '<img src="assets/icons/feedback_misplaced.svg">';
+    for (let i = 0; i < feedback.exact; i++) html += '<img src="assets/feedback_exact.svg">';
+    for (let i = 0; i < feedback.misplaced; i++) html += '<img src="assets/feedback_misplaced.svg">';
     if (feedback.exact === 0 && feedback.misplaced === 0) html += '<span style="color:#ccc; font-weight:bold;">-</span>'; // no matches
     html += '</div>';
     return html;
